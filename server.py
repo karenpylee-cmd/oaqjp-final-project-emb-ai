@@ -27,9 +27,15 @@ def emot_detector():
     dominant_emot = response['dominant_emotion']
 
     if dominant_emot is None:
-        return "Invalid text! Please try again!"
+        return_string = "Invalid text! Please try again!"
     else:
-        return "For the given statement, the system response is 'anger': {}, 'disgust': {}, 'fear': {}, 'joy': {} and 'sadness': {}. The dominant emotion is {}.".format(anger_score, disgust_score, fear_score, joy_score, sadness_score, dominant_emot)
+        return_string = (
+            f"For the given statement, the system response is 'anger': {anger_score}, "
+            f"'disgust': {disgust_score}, 'fear': {fear_score}, 'joy': {joy_score} "
+            f"and 'sadness': {sadness_score}. The dominant emotion is {dominant_emot}."
+            )
+
+    return return_string
 
 @app.route("/")
 def render_index_page():
@@ -39,6 +45,4 @@ def render_index_page():
     return render_template('index.html')
 
 if __name__ == "__main__":
-    ''' This functions executes the flask app and deploys it on localhost:5000
-    '''
     app.run(host="0.0.0.0", port=5000)
