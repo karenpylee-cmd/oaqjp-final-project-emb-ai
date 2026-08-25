@@ -7,24 +7,40 @@ def emotion_detector(text_to_analyze):
     myobj = { "raw_document": { "text": text_to_analyze } }
     response = requests.post(url, json = myobj, headers=header)
 
-    formatted_response = json.loads(response.text)
-    emotionPredictions_list = formatted_response['emotionPredictions']
-    emotion_dict = emotionPredictions_list[0]
+    if response.status_code == 200:
+        formatted_response = json.loads(response.text)
+        emotionPredictions_list = formatted_response['emotionPredictions']
+        emotion_dict = emotionPredictions_list[0]
 
-    anger_score = emotion_dict['emotion']['anger']
-    disgust_score = emotion_dict['emotion']['disgust']
-    fear_score = emotion_dict['emotion']['fear']
-    joy_score = emotion_dict['emotion']['joy']
-    sadness_score = emotion_dict['emotion']['sadness']
-    score_dict = {'anger': anger_score,
-        'disgust': disgust_score,
-        'fear': fear_score,
-        'joy': joy_score,
-        'sadness': sadness_score}
+        anger_score = emotion_dict['emotion']['anger']
+        disgust_score = emotion_dict['emotion']['disgust']
+        fear_score = emotion_dict['emotion']['fear']
+        joy_score = emotion_dict['emotion']['joy']
+        sadness_score = emotion_dict['emotion']['sadness']
 
-    # Get the emotion with the highest score
-    dominant_emotion = max(score_dict, key=score_dict.get)
-    score_dict['dominant_emotion'] = dominant_emotion
+        score_dict = {'anger': anger_score,
+            'disgust': disgust_score,
+            'fear': fear_score,
+            'joy': joy_score,
+            'sadness': sadness_score}
+
+        # Get the emotion with the highest score
+        dominant_emotion = max(score_dict, key=score_dict.get)
+        score_dict['dominant_emotion'] = dominant_emotion
+    elif response.status_code == 400:
+        score_dict = {'anger': None,
+        'disgust': None,
+        'fear': None,
+        'joy': None,
+        'sadness': None,
+        'dominant_emotion': None}
+    else:
+        score_dict = {'anger': None,
+        'disgust': None,
+        'fear': None,
+        'joy': None,
+        'sadness': None,
+        'dominant_emotion': None}
 
     return score_dict
     
